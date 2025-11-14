@@ -10,6 +10,18 @@
 local Runner = require("utils.runner")
 vim.keymap.set("n", "<leader>r", Runner.run_cpp_file, { desc = "Run C++ File" })
 
+local opts = { noremap = true, silent = true }
+
+----------------------------------------
+--- Helper functions
+----------------------------------------
+local function is_mapped(mode, lhs)
+  if vim.keymap and vim.keymap.get then
+    local maps = vim.keymap.get(mode, lhs)
+    return maps and #maps > 0, maps
+  end
+end
+
 ----------------------------------------
 --- Grep in Neovim config keymap
 ----------------------------------------
@@ -19,3 +31,65 @@ vim.keymap.set("n", "<leader>fC", function()
     cwd = vim.fn.stdpath("config"),
   })
 end, { desc = "Grep in Neovim config" })
+
+----------------------------------------
+--- Grep And Search files in Dotfiles config keymap
+---------------------------------------
+vim.keymap.set("n", "<leader>f.", function()
+  require("snacks").picker.files({
+    title = "Find Files in Dotfiles",
+    cwd = vim.env.DOTFILES or "~/.dotfiles",
+    hidden = true,
+  })
+end, { desc = "Find files in Dotfiles config" })
+vim.keymap.set("n", "<leader>f:", function()
+  require("snacks").picker.grep({
+    title = "Grep Dotfiles",
+    cwd = vim.env.DOTFILES or "~/.dotfies",
+    hidden = true,
+  })
+end, { desc = "Grep in Dotfiles config" })
+
+----------------------------------------
+--- Copilot and completion integration
+----------------------------------------
+-- Smart <Tab>: Copilot if visible, else completion, else insert tab
+vim.keymap.set("i", "<Tab>", function()
+  local ok, s = pcall(require, "copilot.suggestion")
+  if ok and s.is_visible() then
+    s.accept()
+    return ""
+  end
+  if vim.fn.pumvisible() == 1 then
+    return "<C-n>"
+  end
+  return "\t"
+end, { expr = true, silent = true })
+
+-- Smart <S-Tab>: previous completion item, else backspace a tab stop
+vim.keymap.set("i", "<S-Tab>", function()
+  if vim.fn.pumvisible() == 1 then
+    return "<C-p>"
+  end
+  return "<BS>"
+end, { expr = true, silent = true })
+
+----------------------------------------
+--- Move lines keymaps
+----------------------------------------
+-- Move selected line / block of text in visual mode
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", opts)
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", opts)
+
+----------------------------------------
+--- Window management keymaps
+----------------------------------------
+-- Save and quit window with <leader>ww if not already mapped
+local exists = is_mapped("n", "<leader>ww")
+if not exists then
+  vim.keymap.set("n", "<leader>ww", "<cmd>wq<cr>", { desc = "Save and Quit Window" })
+else
+  print("Mapping <leader>ww already exists")
+end
+
+--------- End of File ----------
