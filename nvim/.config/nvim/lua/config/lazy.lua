@@ -22,6 +22,11 @@ require("lazy").setup({
     -- 2. Import LazyVim extras (from lazyvim.json)
     { import = "lazyvim.plugins.extras" },
 
+    -- Debugging enabled
+    { import = "lazyvim.plugins.extras.dap.core" },
+    -- Java config
+    { import = "lazyvim.plugins.extras.lang.java" },
+
     -- 3. Import/override with your custom plugins (must be last)
     { import = "plugins" },
   },

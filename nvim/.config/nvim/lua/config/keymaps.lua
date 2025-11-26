@@ -7,9 +7,6 @@
 ----------------------------------------
 ---  run c++
 ----------------------------------------
-local Runner = require("utils.runner")
-vim.keymap.set("n", "<leader>r", Runner.run_cpp_file, { desc = "Run C++ File" })
-
 local opts = { noremap = true, silent = true }
 
 ----------------------------------------

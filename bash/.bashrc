@@ -115,7 +115,6 @@ alias brc="nvim $HOME/.bashrc"
 alias brc.=". $HOME/.bashrc"
 alias cdcp="cd $HOME/Desktop/projects/cp/codeforces"
 alias cdp5="cd $HOME/Desktop/projects/andet/fun/p5"
-alias cdd="cd $HOME/Desktop"
 alias cd.="cd $HOME/.dotfiles"
 alias cdpl="cd $HOME/.config/nvim/lua/plugins"
 
@@ -196,8 +195,20 @@ function ts_enable() {
 export EDITOR="nvim"
 export VISUAL="$EDITOR"
 
+# Using fdfind
+cdd() {
+  local dir
+  # --preview: shows 'ls -A' of the directory currently highlighted
+  # --preview-window: positions it to the right
+  dir=$(fdfind . "$HOME" --type d --hidden --exclude .git | fzf --preview 'eza --tree --level=1 --color=always {}' --preview-window=right:50%)
+
+  if [[ -n "$dir" ]]; then
+    cd "$dir"
+  fi
+}
+
 # llm init spec prompt
-alias llmspec="cat $HOME/Desktop/llm_spec_prompt_init.txt | cc"
+alias llmspec="cat $HOME/.config/llm_spec_prompt_init.txt | cc"
 
 # Stows all packages found in the dotfiles directory automatically.
 # Can also pass arguments through, e.g., `stowAll -R` to restow everything.
@@ -273,3 +284,7 @@ unset __conda_setup
 export PATH="$PATH:/home/hjalte/.lmstudio/bin"
 
 [ -f "/home/hjalte/.ghcup/env" ] && . "/home/hjalte/.ghcup/env" # ghcup-env
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

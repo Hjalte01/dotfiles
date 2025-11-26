@@ -17,5 +17,5 @@ window-decoration = false
 gtk-tabs-location = hidden
 
 # Bluring background-opacity
-background-opacity = 0.97
+# background-opacity = 0.97
 
