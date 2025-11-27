@@ -1,9 +1,12 @@
 -- nvim/after/ftplugin/java.lua
 
 vim.keymap.set("n", "<leader>r", function()
-  -- We add "; read -p '...'" to force the terminal to wait for you to press Enter
-  require("snacks.terminal")("ant build && ant -Dlocaltest=true test; read -p 'Press Enter to close...'", {
+  require("snacks.terminal")("ant build && ant -Dlocaltest=true test;read", {
     win = { position = "float" },
+    start_insert = false,
+    on_open = function()
+      vim.cmd("stopinsert")
+    end,
   })
 end, {
   buffer = true,
